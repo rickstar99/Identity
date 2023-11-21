@@ -1,3 +1,5 @@
+using Identity.Interface;
+using Identity.MongoDb;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
@@ -45,24 +48,13 @@ namespace Identity
                 .AddInMemoryApiResources(Config.ApiResources)
                 .AddDeveloperSigningCredential();
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
+            services.Configure<ConfigurationOptions>(Configuration);
 
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(options =>
-                    {
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuer = true, // Set to true if you want to validate the issuer
-                            ValidateAudience = true, // Set to true if you want to validate the audience
-                            ValidateLifetime = true,
-                            ValidateIssuerSigningKey = true,
-                            ValidIssuer = "your-issuer", // Replace with your issuer URL or identifier
-                            ValidAudience = "your-audience", // Replace with your audience
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("thisIsASecretKeyForHmacSha256Algthm")) // Replace with your secret key
-                        };
-                    });
-
+            services.Configure<MongoDbSettings>(Configuration.GetSection("MongoDbSettings"));
+            services.AddSingleton<IMongoDbSettings>(serviceProvider =>
+                serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value);
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
