@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "lWl7FHJ4vhMrc0aGno1M1NJ59Ncj5z+WwcivEEfRZzrzpQFke4m2Pgya3nHbthkX//Kl1igg4h6CvB47RYoeNQ==",
+  "dgSpecHash": "ZdbTEv9cso4hrQPlTxuwhzukruSexgwDpPHNJmKiuUO3PdsEPjY+8pcP4hTCiF/IGt+ZwOHUzO90rhnePL8L9Q==",
   "success": true,
   "projectFilePath": "C:\\repos\\Identity\\Identity\\Identity.csproj",
   "expectedPackageFiles": [
@@ -27,8 +27,7 @@
     "C:\\Users\\ricky\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512",
     "C:\\Users\\ricky\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512",
     "C:\\Users\\ricky\\.nuget\\packages\\system.security.cryptography.cng\\4.5.0\\system.security.cryptography.cng.4.5.0.nupkg.sha512",
-    "C:\\Users\\ricky\\.nuget\\packages\\system.text.encodings.web\\4.7.0\\system.text.encodings.web.4.7.0.nupkg.sha512",
-    "C:\\Users\\ricky\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.17\\microsoft.netcore.app.host.win-x64.5.0.17.nupkg.sha512"
+    "C:\\Users\\ricky\\.nuget\\packages\\system.text.encodings.web\\4.7.0\\system.text.encodings.web.4.7.0.nupkg.sha512"
   ],
   "logs": []
 }

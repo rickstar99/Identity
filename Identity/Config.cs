@@ -1,24 +1,45 @@
 ﻿using IdentityServer4.Models;
+using IdentityServer4.Test;
 using System.Collections.Generic;
 
-public static class Config
-{
-    public static IEnumerable<IdentityResource> IdentityResources =>
-        new List<IdentityResource>
-        {
-            new IdentityResources.OpenId(),
-            new IdentityResources.Profile(),
-        };
+namespace Identity { 
 
-    public static IEnumerable<Client> Clients =>
-        new List<Client>
-        {
-            new Client
+    public static class Config
+    {
+        public static IEnumerable<Client> Clients =>
+            new List<Client>
             {
-                ClientId = "client_id",
-                AllowedGrantTypes = GrantTypes.ClientCredentials,
-                ClientSecrets = { new Secret("client_secret".Sha256()) },
-                AllowedScopes = { "api" },
-            },
-        };
+                 new Client
+                    {
+                        ClientId = "scraper_api",
+                        AllowedGrantTypes = GrantTypes.ClientCredentials,
+                        ClientSecrets = { new Secret("5cr4p3r".Sha256()) },
+                        RefreshTokenExpiration = TokenExpiration.Sliding,
+                        AllowedScopes = { "scraper_api" },
+                        AccessTokenLifetime = 3600,
+                    }
+            };
+
+        public static IEnumerable<IdentityResource> IdentityResources =>
+            new List<IdentityResource>
+            {
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile(),
+            };
+
+        public static IEnumerable<ApiResource> ApiResources =>
+            new List<ApiResource>
+            {        
+                new ApiResource("scraper_api", "My API")
+                {
+                    Scopes = { "scraper_api" }
+                }
+            };
+
+        public static IEnumerable<ApiScope> ApiScopes =>
+            new List<ApiScope>
+            {
+                new ApiScope("scraper_api", "Access to My API")
+            };
+    }
 }

@@ -30,10 +30,20 @@ namespace Identity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLogging(builder =>
+            {
+                builder.ClearProviders();
+                builder.AddConsole();
+                builder.AddDebug();
+                builder.SetMinimumLevel(LogLevel.Debug); // Set the desired log level
+            });
+            
             services.AddIdentityServer()
-                    .AddInMemoryClients(Config.Clients)
-                    .AddInMemoryIdentityResources(Config.IdentityResources)
-                    .AddDeveloperSigningCredential();
+                .AddInMemoryClients(Config.Clients)
+                .AddInMemoryIdentityResources(Config.IdentityResources)
+                .AddInMemoryApiScopes(Config.ApiScopes)
+                .AddInMemoryApiResources(Config.ApiResources)
+                .AddDeveloperSigningCredential();
 
             services.AddControllers();
 
@@ -63,15 +73,7 @@ namespace Identity
                 });
             });
         }
-        static string GenerateRandomSecretKey()
-        {
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                byte[] keyBytes = new byte[32]; // 256 bits
-                rng.GetBytes(keyBytes);
-                return Convert.ToBase64String(keyBytes);
-            }
-        }
+        
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
