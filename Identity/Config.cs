@@ -1,5 +1,4 @@
-﻿using IdentityServer4.Models;
-using IdentityServer4.Test;
+﻿using Duende.IdentityServer.Models;
 using System.Collections.Generic;
 
 namespace Identity { 
@@ -11,11 +10,11 @@ namespace Identity {
             {
                  new Client
                     {
-                        ClientId = "scraper_api",
+                        ClientId = "test_client",
                         AllowedGrantTypes = GrantTypes.ClientCredentials,
-                        ClientSecrets = { new Secret("5cr4p3r".Sha256()) },
+                        ClientSecrets = { new Secret("cl13n7".Sha256()) },
                         RefreshTokenExpiration = TokenExpiration.Sliding,
-                        AllowedScopes = { "scraper_api" },
+                        AllowedScopes = { "test_client" },
                         AccessTokenLifetime = 3600,
                     }
             };

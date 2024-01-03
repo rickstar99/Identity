@@ -8,32 +8,27 @@ using Identity.Interface;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Events;
 using Identity.Models;
+using System.Linq.Expressions;
 
 namespace Identity.Repository
 {
     public class MongoRepository<TDocument> : IMongoRepository<TDocument> where TDocument : IDocument
     {
-        protected readonly ILogger _logger;
         protected readonly IMongoCollection<TDocument> _collection;
 
-        public MongoRepository(ILogger logger, IMongoDbSettings settings)
+        public MongoRepository(IMongoDbSettings settings)
         {
-            _logger = logger;
 
             var mcs = MongoClientSettings.FromConnectionString(settings.ConnectionString);
-
-            mcs.ClusterConfigurator = cb =>
-            {
-                cb.Subscribe<CommandStartedEvent>(e =>
-                {
-                    _logger.LogDebug($"{e.CommandName} - {e.Command.ToJson()}");
-                });
-            };
+            
             var database = new MongoClient(mcs).GetDatabase(settings.DatabaseName);
-            _collection = database.GetCollection<TDocument>("users");
+            _collection = database.GetCollection<TDocument>("client");
         }
 
-        public TDocument GetUserByEmail(string email)
-            => _collection.Find(Builders<TDocument>.Filter.Eq(u => u.Email, email)).SingleOrDefault();
+        public TDocument FindOne(Expression<Func<TDocument, bool>> filterExpression)
+        {
+            return _collection.Find(filterExpression).FirstOrDefault();
+        }
+
     }
 }

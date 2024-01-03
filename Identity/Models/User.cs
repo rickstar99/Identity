@@ -16,6 +16,5 @@ namespace Identity.Models
 
         }
 
-        public ObjectId Id { get; set; }
     }
 }

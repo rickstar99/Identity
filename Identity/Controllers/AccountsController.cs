@@ -31,7 +31,7 @@ namespace Identity.Controllers
         [HttpPost("connect/token")]
         public async Task<IActionResult> GenerateToken([FromBody] TokenRequestModel tokenRequest)
         {
-            // Validate ClientId and ClientSecret
+ /*           // Validate ClientId and ClientSecret
             if (!IsValidClient(tokenRequest.ClientId, tokenRequest.ClientSecret))
             {
                 return Unauthorized("Invalid client credentials");
@@ -48,32 +48,13 @@ namespace Identity.Controllers
             var token = GenerateJwtToken(user);
 
             // Return the token
-            return Ok(token);
+            */return Ok();
         }
 
         private bool IsValidClient(string clientId, string clientSecret)
         {
             // Implement your logic to validate clientId and clientSecret
             return true;
-        }
-
-        private async Task<User> AuthenticateUserAsync(string email, string password)
-        {
-            // Implement your logic to authenticate user 
-
-            var repo = new MongoRepository<User>(_logger, _settings);
-            var user = repo.GetUserByEmail(email);
-
-            if (user == null)
-                return null;
-
-            var salt = user.Salt;
-            var hashedPassword = SecurePasswordHash.Hash(password, salt);
-
-            if (hashedPassword == user.Password)
-                return user;
-            else
-                return null;
         }
 
         private TokenResponse GenerateJwtToken(User user)

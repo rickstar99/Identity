@@ -6,8 +6,7 @@ namespace Identity.Interface
 {
     public interface IDocument
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string Salt { get; set; }
+        public ObjectId Id { get; set; }
+        public DateTime DateAdded { get; set; }
     }
 }
