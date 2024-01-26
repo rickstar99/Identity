@@ -22,13 +22,21 @@ namespace Identity.Repository
             var mcs = MongoClientSettings.FromConnectionString(settings.ConnectionString);
             
             var database = new MongoClient(mcs).GetDatabase(settings.DatabaseName);
-            _collection = database.GetCollection<TDocument>("client");
+            var typeName = typeof(TDocument).Name;
+            var camelCaseTypeName = Char.ToLowerInvariant(typeName[0]) + typeName.Substring(1);
+
+            _collection = database.GetCollection<TDocument>(camelCaseTypeName);
         }
 
         public TDocument FindOne(Expression<Func<TDocument, bool>> filterExpression)
-        {
-            return _collection.Find(filterExpression).FirstOrDefault();
-        }
+            => _collection.Find(filterExpression).FirstOrDefault();
+        
 
+        public IEnumerable<TDocument> GetAll()
+            => _collection.Find(Builders<TDocument>.Filter.Empty).ToEnumerable();
+
+        public IEnumerable<TDocument> FilterBy(Expression<Func<TDocument, bool>> filter)
+            => _collection.Find(filter).ToEnumerable();
+        
     }
 }

@@ -19,11 +19,26 @@ namespace Identity.Extensions
         /// <returns></returns>
         public static IIdentityServerBuilder AddClients(this IIdentityServerBuilder builder)
         {
-            builder.Services.AddTransient<IClientStore, CustomUserStore>();
+            builder.Services.AddTransient<IClientStore, CustomClientStore>();
             builder.Services.AddTransient<ICorsPolicyService, InMemoryCorsPolicyService>();
 
             return builder;
         }
 
+        public static IIdentityServerBuilder AddUsers(this IIdentityServerBuilder builder)
+        {
+            builder.Services.AddTransient<Interface.IUserStore, CustomUserStore>();
+            builder.Services.AddTransient<ICorsPolicyService, InMemoryCorsPolicyService>();
+
+            return builder;
+        }
+
+        public static IIdentityServerBuilder AddResources(this IIdentityServerBuilder builder)
+        {
+            builder.Services.AddTransient<IResourceStore, CustomResourceStore>();
+            builder.Services.AddTransient<ICorsPolicyService, InMemoryCorsPolicyService>();
+
+            return builder;
+        }
     }
 }

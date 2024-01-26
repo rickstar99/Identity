@@ -36,10 +36,20 @@ namespace Identity
                 builder.AddDebug();
                 builder.SetMinimumLevel(LogLevel.Debug); // Set the desired log level
             });
-
-            services.AddIdentityServer()
-                .AddDeveloperSigningCredential()
-                .AddClients();
+            // Configure Identity
+            services.AddOidcStateDataFormatterCache();
+            var builder = services.AddIdentityServer(options =>
+            {
+                options.Events.RaiseErrorEvents = true;
+                options.Events.RaiseInformationEvents = true;
+                options.Events.RaiseFailureEvents = true;
+                options.Events.RaiseSuccessEvents = true;
+                options.KeyManagement.Enabled = false;
+            })
+            .AddDeveloperSigningCredential()
+            .AddClients()
+            .AddUsers()
+            .AddResources();
 
             services.AddControllers().AddNewtonsoftJson();
             services.Configure<ConfigurationOptions>(Configuration);
@@ -48,17 +58,6 @@ namespace Identity
             services.AddSingleton<IMongoDbSettings>(serviceProvider =>
                 serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value);
 
-            services.AddSingleton<IClientStore, CustomUserStore>();
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Title = "Your API Title",
-                    Version = "v1",
-                    Description = "Your API Description"
-                });
-            });
         }
         
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,6 +67,7 @@ namespace Identity
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors();
             app.UseIdentityServer();
 
             app.UseHttpsRedirection();
@@ -79,11 +79,6 @@ namespace Identity
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API Title");
             });
         }
     }

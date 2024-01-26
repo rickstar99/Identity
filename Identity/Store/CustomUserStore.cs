@@ -1,36 +1,46 @@
-﻿using Identity.Models;
-using IdentityModel;
-using Microsoft.AspNetCore.Identity;
+﻿using Identity.Interface;
+using Identity.Models;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Duende.IdentityServer.Stores;
-using Identity.Repository;
-using Identity.MongoDb;
-using Identity.Interface;
-using Microsoft.Extensions.Configuration;
 
 namespace Identity.Store
-{ 
-    public class CustomUserStore : IClientStore
+{
+    public class CustomUserStore : IUserStore
     {
-        private readonly MongoDbSettings mdbSettings;
-        private readonly IConfiguration _config;
-
-        public CustomUserStore(IConfiguration config)
+        public User AutoProvisionUser(string provider, string userId, List<Claim> claims)
         {
-            _config = config;
-            mdbSettings = new MongoDbSettings();
-            _config.GetSection("MongoDbSettings").Bind(mdbSettings);
+            throw new System.NotImplementedException();
         }
 
-        public Task<Duende.IdentityServer.Models.Client> FindClientByIdAsync(string clientId)
+        public void ChangePassword(string username, string password, bool isStaff)
         {
-            var repo = new MongoRepository<Models.Client>(mdbSettings);
+            throw new System.NotImplementedException();
+        }
 
-            var client = repo.FindOne(c => c.ClientId == clientId);
+        public User FindByExternalProvider(string provider, string userId, string email)
+        {
+            throw new System.NotImplementedException();
+        }
 
-            return Task.FromResult((Duende.IdentityServer.Models.Client)client);
+        public Task<User> FindBySubjectId(string subjectId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<User> FindByUsername(string username)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void MarkEmailAsVerified(string username)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool ValidateCredentials(string username, string password)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
