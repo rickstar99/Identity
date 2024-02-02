@@ -1,5 +1,9 @@
-﻿using Identity.Interface;
+﻿using Duende.IdentityServer.Models;
+using Identity.Interface;
 using Identity.Models;
+using Identity.MongoDb;
+using Identity.Repository;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -7,8 +11,18 @@ using System.Threading.Tasks;
 namespace Identity.Store
 {
     public class CustomUserStore : IUserStore
+    { 
+        private readonly MongoDbSettings mdbSettings;
+        private readonly IConfiguration _config;
+
+    public CustomUserStore(IConfiguration config)
     {
-        public User AutoProvisionUser(string provider, string userId, List<Claim> claims)
+        _config = config;
+        mdbSettings = new MongoDbSettings();
+        _config.GetSection("MongoDbSettings").Bind(mdbSettings);
+    }
+
+    public User AutoProvisionUser(string provider, string userId, List<Claim> claims)
         {
             throw new System.NotImplementedException();
         }
@@ -40,7 +54,10 @@ namespace Identity.Store
 
         public bool ValidateCredentials(string username, string password)
         {
-            throw new System.NotImplementedException();
+            var repo = new MongoRepository<User>(mdbSettings);
+
+            var user = repo.FindOne(u => u.Username == username && u.Password == password.Sha256());
+            return user != null;
         }
     }
 }

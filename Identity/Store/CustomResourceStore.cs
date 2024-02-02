@@ -84,7 +84,15 @@ namespace Identity.Store
 
         public Task<Resources> GetAllResourcesAsync()
         {
-            throw new System.NotImplementedException();
+            var resources = new Resources
+            {
+                IdentityResources = FindIdentityResourcesByScopeNameAsync(new List<string>().AsEnumerable()).GetAwaiter().GetResult().ToList(),
+                ApiScopes = FindApiScopesByNameAsync(new List<string>().AsEnumerable()).GetAwaiter().GetResult().ToList(),
+                ApiResources = FindApiResourcesByScopeNameAsync(new List<string>().AsEnumerable()).GetAwaiter().GetResult().ToList()
+            };
+
+            return Task.FromResult(resources);
         }
+    }
     }
 }

@@ -40,5 +40,12 @@ namespace Identity.Extensions
 
             return builder;
         }
+        public static IIdentityServerBuilder AddPersistenceGrants(this IIdentityServerBuilder builder)
+        {
+            builder.Services.AddTransient<IPersistedGrantStore, CustomPersistenceStore>();
+            builder.Services.AddTransient<ICorsPolicyService, InMemoryCorsPolicyService>();
+
+            return builder;
+        }
     }
 }

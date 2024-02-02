@@ -47,7 +47,9 @@ namespace Identity
                 options.KeyManagement.Enabled = false;
             })
             .AddDeveloperSigningCredential()
+            .AddPersistenceGrants()
             .AddClients()
+            .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
             .AddUsers()
             .AddResources();
 
