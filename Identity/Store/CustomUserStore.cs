@@ -55,7 +55,7 @@ namespace Identity.Store
         public bool ValidateCredentials(string username, string password)
         {
             var repo = new MongoRepository<User>(mdbSettings);
-
+            //var _x = "ailacs".Sha256();
             var user = repo.FindOne(u => u.Username == username && u.Password == password.Sha256());
             return user != null;
         }

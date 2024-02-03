@@ -5,6 +5,7 @@ using Identity.Extensions;
 using Identity.Interface;
 using Identity.MongoDb;
 using Identity.Store;
+using Identity.Validator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -47,11 +48,12 @@ namespace Identity
                 options.KeyManagement.Enabled = false;
             })
             .AddDeveloperSigningCredential()
-            .AddPersistenceGrants()
+            //.AddPersistenceGrants()
             .AddClients()
             .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
             .AddUsers()
             .AddResources();
+            //.AddSecretValidator<SecretValidator>();
 
             services.AddControllers().AddNewtonsoftJson();
             services.Configure<ConfigurationOptions>(Configuration);
@@ -70,12 +72,13 @@ namespace Identity
                 app.UseDeveloperExceptionPage();
             }
             app.UseCors();
-            app.UseIdentityServer();
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseIdentityServer();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

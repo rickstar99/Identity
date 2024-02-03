@@ -94,5 +94,5 @@ namespace Identity.Store
             return Task.FromResult(resources);
         }
     }
-    }
+    
 }

@@ -30,6 +30,7 @@ namespace Identity.Store
 
         public Task<Duende.IdentityServer.Models.Client> FindClientByIdAsync(string clientId)
         {
+            var _x = "ailacs".Sha256();
             var repo = new MongoRepository<Models.Client>(mdbSettings);
             var mongoClient = repo.FindOne(c => c.ClientId == clientId);
 
@@ -41,7 +42,7 @@ namespace Identity.Store
                 ClientName = mongoClient.ClientName,
                 AllowedGrantTypes = mongoClient.AllowedGrantTypes.ToList(),
                 AllowedScopes = mongoClient.AllowedScopes.ToList(),
-                ClientSecrets = mongoClient.ClientSecrets.Select(cs => new Secret(cs.Value, cs.Expiration)).ToList(),
+                ClientSecrets = mongoClient.ClientSecrets.Select(cs => new Secret(cs.Value, cs.Description, cs.Expiration)).ToList(),
                 AllowedCorsOrigins = mongoClient.AllowedCorsOrigins
                 // ... map other properties as needed
             };
