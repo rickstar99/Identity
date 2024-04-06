@@ -5,5 +5,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <ActiveDebugProfile>Identity</ActiveDebugProfile>
+    <NameOfLastUsedPublishProfile>C:\repos\Identity\Identity\Identity\Properties\PublishProfiles\IdentityAilacs - Zip Deploy.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
