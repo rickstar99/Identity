@@ -32,7 +32,6 @@ namespace Identity.Store
         {
             var repo = new MongoRepository<Models.Client>(mdbSettings);
             var mongoClient = repo.FindOne(c => c.ClientId == clientId);
-
             if (mongoClient == null) return null;
 
             var client = new Duende.IdentityServer.Models.Client

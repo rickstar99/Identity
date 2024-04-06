@@ -59,7 +59,7 @@ namespace Identity.Interface
         //   password:
         //     The password.
         public void MarkEmailAsVerified(string username);
-        public bool ValidateCredentials(string username, string password);
+        public User ValidateCredentials(string username, string password);
         public void ChangePassword(string username, string password, bool isStaff);
     }
 }

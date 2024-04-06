@@ -52,10 +52,18 @@ namespace Identity
             .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
             .AddUsers()
             .AddResources();
+            //.AddCustomSecretValidator();
+
+            services.AddLogging(builder =>
+            {
+                builder.ClearProviders();
+                builder.AddConsole();
+                builder.AddDebug();
+                builder.SetMinimumLevel(LogLevel.Debug); // Or LogLevel.Trace for even more detail
+            });
 
             services.AddControllers().AddNewtonsoftJson();
             services.Configure<ConfigurationOptions>(Configuration);
-
             services.Configure<MongoDbSettings>(Configuration.GetSection("MongoDbSettings"));
             services.AddSingleton<IMongoDbSettings>(serviceProvider =>
                 serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value);

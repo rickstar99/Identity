@@ -12,10 +12,11 @@ public class ResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
     public Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
     {
         // Your logic to validate the username and password
-        if (_userStore.ValidateCredentials(context.UserName, context.Password))
+        var user = _userStore.ValidateCredentials(context.UserName, context.Password);
+        if (user != null)
         {
             context.Result = new GrantValidationResult(
-                subject: context.UserName,
+                subject: user.Id.ToString(),
                 authenticationMethod: "custom");
         }
         else

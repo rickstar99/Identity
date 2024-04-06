@@ -52,12 +52,11 @@ namespace Identity.Store
             throw new System.NotImplementedException();
         }
 
-        public bool ValidateCredentials(string username, string password)
+        public User ValidateCredentials(string username, string password)
         {
             var repo = new MongoRepository<User>(mdbSettings);
 
-            var user = repo.FindOne(u => u.Username == username && u.Password == password.Sha256());
-            return user != null;
+            return repo.FindOne(u => u.Username == username && u.Password == password.Sha256());
         }
     }
 }
