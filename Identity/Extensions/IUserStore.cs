@@ -19,7 +19,7 @@ namespace Identity.Extensions
         //
         //   claims:
         //     The claims.
-        public User AutoProvisionUser(string provider, string userId, List<Claim> claims);
+        public Users AutoProvisionUser(string provider, string userId, List<Claim> claims);
         //
         // Summary:
         //     Finds the user by external provider.
@@ -30,7 +30,7 @@ namespace Identity.Extensions
         //
         //   userId:
         //     The user identifier.
-        public User FindByExternalProvider(string provider, string userId, string email);
+        public Users FindByExternalProvider(string provider, string userId, string email);
         //
         // Summary:
         //     Finds the user by subject identifier.
@@ -38,7 +38,7 @@ namespace Identity.Extensions
         // Parameters:
         //   subjectId:
         //     The subject identifier.
-        public User FindBySubjectId(string subjectId);
+        public Users FindBySubjectId(string subjectId);
         //
         // Summary:
         //     Finds the user by username.
@@ -46,7 +46,7 @@ namespace Identity.Extensions
         // Parameters:
         //   username:
         //     The username.
-        public Task<User> FindByUsername(string username);
+        public Task<Users> FindByUsername(string username);
         //
         // Summary:
         //     Validates the credentials.

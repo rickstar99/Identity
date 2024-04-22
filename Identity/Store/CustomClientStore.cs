@@ -30,8 +30,7 @@ namespace Identity.Store
 
         public Task<Duende.IdentityServer.Models.Client> FindClientByIdAsync(string clientId)
         {
-            var _x = "ailacs".Sha256();
-            var repo = new MongoRepository<Models.Client>(mdbSettings);
+            var repo = new MongoRepository<Models.Clients>(mdbSettings);
             var mongoClient = repo.FindOne(c => c.ClientId == clientId);
             if (mongoClient == null) return null;
 
@@ -43,7 +42,6 @@ namespace Identity.Store
                 AllowedScopes = mongoClient.AllowedScopes.ToList(),
                 ClientSecrets = mongoClient.ClientSecrets.Select(cs => new Secret(cs.Value, cs.Description, cs.Expiration)).ToList(),
                 AllowedCorsOrigins = mongoClient.AllowedCorsOrigins
-                // ... map other properties as needed
             };
             return Task.FromResult(client);
         }

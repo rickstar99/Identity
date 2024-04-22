@@ -8,12 +8,12 @@ using System.Security.Claims;
 namespace Identity.Models
 {
     [BsonIgnoreExtraElements]
-    [BsonCollection("user")]
-    public class User : Document
+    [BsonCollection("users")]
+    public class Users : Document
     {
         public string Password { get; set; }
         public string Username { get; set; }
-        public User()
+        public Users()
         {
 
         }

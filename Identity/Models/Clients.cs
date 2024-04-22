@@ -9,8 +9,8 @@ using System.Collections.Generic;
 namespace Identity.Models
 {
     [BsonIgnoreExtraElements]
-    [BsonCollection("client")]
-    public class Client : Duende.IdentityServer.Models.Client, IDocument
+    [BsonCollection("clients")]
+    public class Clients : Duende.IdentityServer.Models.Client, IDocument
     {
         public DateTime DateAdded { get; set; }
         public ObjectId Id { get; set; }

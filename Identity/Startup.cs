@@ -1,11 +1,13 @@
 
 
+using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Stores;
 using Identity.Extensions;
 using Identity.Interface;
 using Identity.MongoDb;
 using Identity.Store;
 using Identity.Validator;
+using IdentityModel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +16,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using System;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Identity
 {

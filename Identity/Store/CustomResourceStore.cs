@@ -46,7 +46,7 @@ namespace Identity.Store
 
         public Task<IEnumerable<ApiScope>> FindApiScopesByNameAsync(IEnumerable<string> scopeNames)
         {
-            var repo = new MongoRepository<Models.ApiScope>(mdbSettings);
+            var repo = new MongoRepository<Models.ApiScopes>(mdbSettings);
 
             var list = repo.FilterBy(r => r.Enabled).ToList();
 
