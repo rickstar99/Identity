@@ -1,40 +1,22 @@
 ﻿using Identity.Models;
-using IdentityModel;
-using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Duende.IdentityServer.Stores;
-using Identity.Repository;
-using Identity.MongoDb;
-using Identity.Interface;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using System.Linq;
 using Duende.IdentityServer.Models;
-using Duende.IdentityServer;
+using MongoDbHelper;
 
 namespace Identity.Store
 { 
     public class CustomClientStore : IClientStore
     {
-        private readonly MongoDbSettings mdbSettings;
-        private readonly IConfiguration _config;
+        private readonly IMongoRepository _repository;
 
-        public CustomClientStore(IConfiguration config)
+        public async Task<Client> FindClientByIdAsync(string clientId)
         {
-            _config = config;
-            mdbSettings = new MongoDbSettings();
-            _config.GetSection("MongoDbSettings").Bind(mdbSettings);
-        }
-
-        public Task<Duende.IdentityServer.Models.Client> FindClientByIdAsync(string clientId)
-        {
-            var repo = new MongoRepository<Models.Clients>(mdbSettings);
-            var mongoClient = repo.FindOne(c => c.ClientId == clientId);
+            var mongoClient = await _repository.FindOneAsync<Clients>(c => c.ClientId == clientId);
             if (mongoClient == null) return null;
 
-            var client = new Duende.IdentityServer.Models.Client
+            return new Client
             {
                 ClientId = mongoClient.ClientId,
                 ClientName = mongoClient.ClientName,
@@ -43,7 +25,6 @@ namespace Identity.Store
                 ClientSecrets = mongoClient.ClientSecrets.Select(cs => new Secret(cs.Value, cs.Description, cs.Expiration)).ToList(),
                 AllowedCorsOrigins = mongoClient.AllowedCorsOrigins
             };
-            return Task.FromResult(client);
         }
     }
 }

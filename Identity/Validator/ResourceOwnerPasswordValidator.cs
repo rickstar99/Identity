@@ -9,6 +9,7 @@ public class ResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
 
     public ResourceOwnerPasswordValidator(IUserStore userStore)
         => _userStore = userStore;
+
     public Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
     {
         // Your logic to validate the username and password
@@ -22,7 +23,7 @@ public class ResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
         else
         {
             context.Result = new GrantValidationResult(
-                TokenRequestErrors.InvalidGrant, "invalid custom credential");
+            TokenRequestErrors.InvalidGrant, "invalid custom credential");
         }
 
         return Task.CompletedTask;

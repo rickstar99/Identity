@@ -4,7 +4,7 @@ using System;
 
 namespace Identity.Security
 {
-    public class SecurePasswordHash
+    public static class SecurePasswordHash
     {
         private const int Iterations = 10000;
         private const int SaltSize = 16;

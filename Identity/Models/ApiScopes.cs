@@ -1,13 +1,16 @@
-﻿using Identity.Interface;
-using Identity.MongoDb;
-using MongoDB.Bson;
+﻿using Duende.IdentityServer.Models;
+using Identity.Interface;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDbHelper;
 using System;
 
 namespace Identity.Models
 {
-    public class ApiScopes : Duende.IdentityServer.Models.ApiScope, IDocument
+    [BsonIgnoreExtraElements]
+    [BsonCollection("clients")]
+    public class ApiScopes : ApiScope, IDocument
     {
-        public ObjectId Id { get; set; }         
+        public string Id { get; set; }         
         public DateTime DateAdded { get; set; }
     }
 }

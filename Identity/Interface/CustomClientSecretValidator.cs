@@ -2,7 +2,6 @@
 using System.Text;
 using System;
 using System.Threading.Tasks;
-using Amazon.Runtime.Internal;
 using Duende.IdentityServer.Validation;
 using Identity.Store;
 using Microsoft.AspNetCore.Http;

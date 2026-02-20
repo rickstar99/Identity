@@ -1,8 +1,8 @@
-﻿using Duende.IdentityServer.Models;
+﻿using AutoMapper;
+using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Stores;
-using Identity.MongoDb;
-using Identity.Repository;
-using Microsoft.Extensions.Configuration;
+using Identity.Models;
+using MongoDbHelper;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,88 +11,51 @@ namespace Identity.Store
 {
     public class CustomResourceStore : IResourceStore
     {
+        private readonly IMongoRepository _repository;
+        private readonly IMapper _mapper;
 
-        private readonly MongoDbSettings mdbSettings;
-        private readonly IConfiguration _config;
-
-        public CustomResourceStore(IConfiguration config)
+        public CustomResourceStore(IMongoRepository repository, IMapper mapper)
         {
-            _config = config;
-            mdbSettings = new MongoDbSettings();
-            _config.GetSection("MongoDbSettings").Bind(mdbSettings);
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        public Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames)
+        public async Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames)
         {
-            throw new System.NotImplementedException();
+            var results = await _repository.FindManyAsync<ApiResources>(x => apiResourceNames.Contains(x.Name));
+            return _mapper.Map<IEnumerable<ApiResource>>(results);
         }
 
-        public Task<IEnumerable<ApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
+        public async Task<IEnumerable<ApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
         {
-            var repo = new MongoRepository<Models.IdentityResource>(mdbSettings);
-
-            var list = repo.FilterBy(r => r.Enabled).ToList();
-
-            var apiSResources = list.Select(resource => new ApiResource
-            {
-                Name = resource.Name,
-                Enabled  = true,
-                DisplayName = resource.DisplayName,
-                Description = resource.Description,
-            });
-
-            return Task.FromResult<IEnumerable<ApiResource>>(apiSResources);
+            // Assuming your Mongo model has a Scopes list for filtering
+            var results = await _repository.FindManyAsync<ApiResources>(x => x.Scopes.Any(s => scopeNames.Contains(s)));
+            return _mapper.Map<IEnumerable<ApiResource>>(results);
         }
 
-        public Task<IEnumerable<ApiScope>> FindApiScopesByNameAsync(IEnumerable<string> scopeNames)
+        public async Task<IEnumerable<ApiScope>> FindApiScopesByNameAsync(IEnumerable<string> scopeNames)
         {
-            var repo = new MongoRepository<Models.ApiScopes>(mdbSettings);
-
-            var list = repo.FilterBy(r => r.Enabled).ToList();
-
-            var apiScopes = list.Select(resource => new ApiScope
-            {
-                Name = resource.Name,
-                Enabled = true,
-                DisplayName = resource.DisplayName,
-                Description = resource.Description,
-                UserClaims = resource.UserClaims
-            });
-
-            return Task.FromResult<IEnumerable<ApiScope>>(apiScopes);
-
+            var results = await _repository.FindManyAsync<Models.ApiScopes>(x => scopeNames.Contains(x.Name));
+            return _mapper.Map<IEnumerable<ApiScope>>(results);
         }
 
-        public Task<IEnumerable<IdentityResource>> FindIdentityResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
+        public async Task<IEnumerable<Duende.IdentityServer.Models.IdentityResource>> FindIdentityResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
         {
-            var repo = new MongoRepository<Models.IdentityResource>(mdbSettings);
-
-            var list = repo.FilterBy(r => r.Enabled).ToList();
-
-            var identityResources = list.Select(resource => new IdentityResource
-            {
-                Name = resource.Name,
-                Enabled = true,
-                DisplayName = resource.DisplayName,
-                Description = resource.Description,
-                UserClaims = resource.UserClaims
-            });
-
-            return Task.FromResult<IEnumerable<IdentityResource>>(identityResources);
+            var results = await _repository.FindManyAsync<Models.IdentityResources>(x => scopeNames.Contains(x.Name));
+            return _mapper.Map<IEnumerable<IdentityResource>>(results);
         }
 
-
-        public Task<Resources> GetAllResourcesAsync()
+        public async Task<Resources> GetAllResourcesAsync()
         {
-            var resources = new Resources
-            {
-                IdentityResources = FindIdentityResourcesByScopeNameAsync(new List<string>().AsEnumerable()).GetAwaiter().GetResult().ToList(),
-                ApiScopes = FindApiScopesByNameAsync(new List<string>().AsEnumerable()).GetAwaiter().GetResult().ToList(),
-                ApiResources = FindApiResourcesByScopeNameAsync(new List<string>().AsEnumerable()).GetAwaiter().GetResult().ToList()
-            };
+            var identity = await _repository.FindManyAsync<Models.IdentityResources>(x => true);
+            var apiScopes = await _repository.FindManyAsync<ApiScopes>(x => true);
+            var apiResources = await _repository.FindManyAsync<ApiResources>(x => true);
 
-            return Task.FromResult(resources);
+            return new Resources(
+                _mapper.Map<IEnumerable<IdentityResource>>(identity),
+                _mapper.Map<IEnumerable<ApiResource>>(apiResources),
+                _mapper.Map<IEnumerable<ApiScope>>(apiScopes)
+            );
         }
     }
-    
 }
